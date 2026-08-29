@@ -610,13 +610,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Bold
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         // Inline code
-        html = html.replace(/`([^`]+)`/g, '<code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); color: var(--cyan);">$1</code>');
+        html = html.replace(/`([^`]+)`/g, '<code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); color: var(--color-green);">$1</code>');
         // Headers
-        html = html.replace(/### (.*?)\n/g, '<h4 style="margin: 12px 0 8px; color: var(--cyan); font-size: 1rem;">$1</h4>');
+        html = html.replace(/### (.*?)\n/g, '<h4 style="margin: 12px 0 8px; color: var(--color-yellow); font-size: 0.95rem; font-weight: 800;">$1</h4>');
         // Bullet points
         html = html.replace(/^\s*-\s+(.*?)$/gm, '<li style="margin-left: 20px; margin-bottom: 4px;">$1</li>');
         // Blockquotes
-        html = html.replace(/^&gt; (.*?)$/gm, '<blockquote style="border-left: 3px solid var(--cyan); padding-left: 12px; margin: 10px 0; color: var(--text-secondary); font-style: italic; background: rgba(6,182,212,0.04); padding: 8px 12px; border-radius: 0 8px 8px 0;">$1</blockquote>');
+        html = html.replace(/^&gt; (.*?)$/gm, '<blockquote style="border-left: 3px solid var(--color-green); padding-left: 12px; margin: 10px 0; color: var(--text-secondary); font-style: italic; background: var(--color-green-bg); padding: 8px 12px; border-radius: 0 6px 6px 0;">$1</blockquote>');
         // Linebreaks
         html = html.replace(/\n\n/g, '<br><br>');
         return html;
