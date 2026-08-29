@@ -1,0 +1,21 @@
+# Environments
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data & vector DB storage
+*.sqlite3
+*.db
+.chroma/
+storage/
