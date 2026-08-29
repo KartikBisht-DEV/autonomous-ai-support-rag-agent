@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // App State
     const state = {
         activeTab: "chat-tab",
+        theme: localStorage.getItem("rag_theme") || "dark",
         llmProvider: localStorage.getItem("rag_provider") || "local",
         apiKey: localStorage.getItem("rag_api_key") || "",
         systemPrompt: localStorage.getItem("rag_sys_prompt") || "You are an Autonomous AI Customer Support Agent with RAG. You provide accurate, factual assistance grounded strictly in company policies.",
@@ -14,6 +15,43 @@ document.addEventListener("DOMContentLoaded", () => {
         stats: null,
         chatHistory: []
     };
+
+    // DOM Elements - Theme Toggle
+    const themeToggleBtn = document.getElementById("theme-toggle-btn");
+    const themeIcon = document.getElementById("theme-icon");
+    const themeLabel = document.getElementById("theme-label");
+    const mobileThemeToggleBtn = document.getElementById("mobile-theme-toggle-btn");
+    const mobileThemeIcon = document.getElementById("mobile-theme-icon");
+
+    // Theme Switch Controller
+    function applyTheme(t) {
+        state.theme = t;
+        localStorage.setItem("rag_theme", t);
+        if (t === "light") {
+            document.body.classList.remove("dark-theme");
+            document.body.classList.add("light-theme");
+            if (themeIcon) themeIcon.className = "fa-solid fa-moon";
+            if (themeLabel) themeLabel.textContent = "Dark Mode";
+            if (mobileThemeIcon) mobileThemeIcon.className = "fa-solid fa-moon";
+        } else {
+            document.body.classList.remove("light-theme");
+            document.body.classList.add("dark-theme");
+            if (themeIcon) themeIcon.className = "fa-solid fa-sun";
+            if (themeLabel) themeLabel.textContent = "Light Mode";
+            if (mobileThemeIcon) mobileThemeIcon.className = "fa-solid fa-sun";
+        }
+    }
+
+    function toggleTheme() {
+        const nextTheme = state.theme === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+    }
+
+    if (themeToggleBtn) themeToggleBtn.addEventListener("click", toggleTheme);
+    if (mobileThemeToggleBtn) mobileThemeToggleBtn.addEventListener("click", toggleTheme);
+
+    // Apply saved theme on boot
+    applyTheme(state.theme);
 
     // DOM Elements - Navigation
     const navLinks = document.querySelectorAll(".nav-link");

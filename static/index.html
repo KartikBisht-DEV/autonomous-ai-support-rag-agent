@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#090d16">
-    <meta name="description" content="Autonomous AI Support Agent with RAG - B.Tech CSE Final Year Major Project by Kartik Bisht">
+    <meta name="description" content="Autonomous AI Support Agent with RAG - Multi-stage Pipeline with Vector DB & Agentic Brain">
     <title>Autonomous AI Support Agent with RAG | Kartik Bisht</title>
     
     <!-- Google Fonts -->
@@ -18,7 +18,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
-<body>
+<body class="dark-theme">
     <div class="app-layout">
         <!-- Mobile Header Bar -->
         <header class="mobile-navbar">
@@ -31,7 +31,10 @@
                 </div>
                 <span class="brand-title">AutoSupport<span class="text-green">RAG</span></span>
             </div>
-            <div class="mobile-status">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button class="icon-btn" id="mobile-theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
+                    <i class="fa-solid fa-sun" id="mobile-theme-icon"></i>
+                </button>
                 <span class="ping-circle"></span>
             </div>
         </header>
@@ -87,12 +90,6 @@
                     <span class="nav-label">Agent Tools & Live DB</span>
                 </button>
 
-                <button class="nav-link" data-tab="viva-tab" id="nav-viva">
-                    <div class="nav-icon-wrapper"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <span class="nav-label">Interview & Viva Guide</span>
-                    <span class="nav-badge-pill" style="background: var(--color-green-bg); color: var(--color-green); border: 1px solid var(--color-green-border);">Viva</span>
-                </button>
-
                 <button class="nav-link" data-tab="settings-tab" id="nav-settings">
                     <div class="nav-icon-wrapper"><i class="fa-solid fa-sliders"></i></div>
                     <span class="nav-label">Brain & Model Config</span>
@@ -143,6 +140,11 @@
                 </div>
 
                 <div class="header-actions">
+                    <!-- Light / Dark Mode Toggle Button -->
+                    <button class="action-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode">
+                        <i class="fa-solid fa-sun" id="theme-icon"></i>
+                        <span id="theme-label">Light Mode</span>
+                    </button>
                     <button class="action-btn" id="btn-quick-reset" title="Reset Knowledge Base to default enterprise policies">
                         <i class="fa-solid fa-rotate-left"></i>
                         <span>Reset KB</span>
@@ -506,106 +508,7 @@
                 </div>
             </section>
 
-            <!-- TAB 6: INTERVIEW & VIVA PREPARATION GUIDE (B.TECH CSE) -->
-            <section class="tab-content" id="viva-tab">
-                <div class="solid-panel">
-                    <div class="panel-header">
-                        <div class="panel-icon green"><i class="fa-solid fa-graduation-cap"></i></div>
-                        <div>
-                            <h3 class="panel-title">B.Tech CSE Placement Interview & Viva Guide</h3>
-                            <p class="panel-desc">Quick cheat sheet, system design justification, mathematical formulas, and top 10 interviewer questions</p>
-                        </div>
-                    </div>
-
-                    <div class="panel-body">
-                        <!-- Elevator Pitch Card -->
-                        <div class="solid-panel" style="background: var(--color-green-bg); border-color: var(--color-green-border); margin-bottom: 20px; padding: 18px;">
-                            <h4 style="color: var(--color-green); font-size: 1rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-bullhorn"></i> 1-Minute Elevator Pitch (Say this in interview)
-                            </h4>
-                            <p style="font-size: 0.86rem; color: var(--text-primary); line-height: 1.6;">
-                                <em>"I built an <strong>Autonomous AI Support Agent with RAG</strong> to solve enterprise customer support hallucination. The system implements a 4-stage pipeline: First, it ingests raw policy PDFs and applies sliding-window recursive chunking (350 tokens, 60 overlap) to preserve semantic boundaries. Second, it computes high-dimensional vector embeddings and indexes them in a Cosine Vector Store with hybrid BM25 keyword reranking. Third, an Agentic Brain uses a ReAct loop to classify user intent, autonomously invoke backend tools (like live order lookup, refund calculations, and SLA ticket escalations), and verify fact-grounding. Finally, it synthesizes factual responses with full source citations and live thought tracing."</em>
-                            </p>
-                        </div>
-
-                        <!-- Mathematical Foundations -->
-                        <div style="margin-bottom: 24px;">
-                            <h4 style="font-size: 0.95rem; color: var(--color-white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-square-root-variable text-yellow"></i> Mathematical & Algorithmic Foundations
-                            </h4>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
-                                <div class="result-card">
-                                    <h5 style="color: var(--color-green); margin-bottom: 4px;">1. Cosine Similarity Formula</h5>
-                                    <code style="display: block; background: #020617; padding: 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 6px; color: var(--color-green);">
-                                        Cosine(u, v) = (u • v) / (||u||₂ * ||v||₂)
-                                    </code>
-                                    <p style="font-size: 0.76rem; color: var(--text-muted);">Calculates the angular distance between normalized high-dimensional query and document vectors, invariant to text length.</p>
-                                </div>
-                                <div class="result-card">
-                                    <h5 style="color: var(--color-yellow); margin-bottom: 4px;">2. Sliding Window Chunking</h5>
-                                    <code style="display: block; background: #020617; padding: 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 6px; color: var(--color-yellow);">
-                                        Step = ChunkSize (350) - Overlap (60) = 290
-                                    </code>
-                                    <p style="font-size: 0.76rem; color: var(--text-muted);">60-token overlap prevents sentences from being severed mid-thought across adjacent chunk boundaries.</p>
-                                </div>
-                                <div class="result-card">
-                                    <h5 style="color: var(--color-white); margin-bottom: 4px;">3. Time & Space Complexity</h5>
-                                    <code style="display: block; background: #020617; padding: 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 6px; color: var(--color-white);">
-                                        Search Time: O(N * D) | Memory: O(N * D)
-                                    </code>
-                                    <p style="font-size: 0.76rem; color: var(--text-muted);">Where N = number of indexed chunks, D = embedding dimension (256 dense features).</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Top 10 Interview Questions Accordion -->
-                        <div>
-                            <h4 style="font-size: 0.95rem; color: var(--color-white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-circle-question text-green"></i> Top Interview Questions & Ready Answers
-                            </h4>
-                            
-                            <div style="display: flex; flex-direction: column; gap: 10px;">
-                                <details class="thought-card" style="padding: 10px 14px; cursor: pointer;">
-                                    <summary style="font-weight: 700; color: var(--color-green); font-size: 0.86rem;">Q1: Why did you choose RAG instead of Fine-Tuning an LLM?</summary>
-                                    <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                                        <strong>Answer:</strong> Fine-tuning updates model weights for style/format, but is expensive, slow to update, and still hallucinates on dynamic facts. RAG separates <em>knowledge retrieval</em> from <em>reasoning</em>: policy updates only require re-indexing a PDF in the Vector DB without retraining. It also provides verifiable source citations.
-                                    </p>
-                                </details>
-
-                                <details class="thought-card" style="padding: 10px 14px; cursor: pointer;">
-                                    <summary style="font-weight: 700; color: var(--color-yellow); font-size: 0.86rem;">Q2: How does the ReAct Agent decide whether to call a tool or search the knowledge base?</summary>
-                                    <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                                        <strong>Answer:</strong> The orchestrator implements a multi-step ReAct loop: First, it runs intent & entity classification. If an Order ID (<code>ORD-XXXX</code>) is detected, it triggers <code>lookup_order</code>. If refund intent is present, it computes eligibility against the 30-day return policy. If low confidence or high outage sentiment is detected, it executes <code>escalate_ticket</code>.
-                                    </p>
-                                </details>
-
-                                <details class="thought-card" style="padding: 10px 14px; cursor: pointer;">
-                                    <summary style="font-weight: 700; color: var(--color-green); font-size: 0.86rem;">Q3: How do you prevent LLM hallucinations?</summary>
-                                    <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                                        <strong>Answer:</strong> We enforce three guardrails: (1) Prompt grounding constraint instructing the model to answer <em>only</em> from retrieved context chunks, (2) Grounding confidence scoring that measures semantic alignment, and (3) Source document citation linking.
-                                    </p>
-                                </details>
-
-                                <details class="thought-card" style="padding: 10px 14px; cursor: pointer;">
-                                    <summary style="font-weight: 700; color: var(--color-white); font-size: 0.86rem;">Q4: Why FastAPI over traditional Flask or Django?</summary>
-                                    <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                                        <strong>Answer:</strong> FastAPI is built natively on ASGI (Starlette + Uvicorn) providing asynchronous non-blocking I/O, which is essential when awaiting external LLM API calls and vector calculations. It also offers automatic Pydantic schema validation and Swagger docs.
-                                    </p>
-                                </details>
-
-                                <details class="thought-card" style="padding: 10px 14px; cursor: pointer;">
-                                    <summary style="font-weight: 700; color: var(--color-yellow); font-size: 0.86rem;">Q5: How would you scale this system for 10 Million enterprise documents?</summary>
-                                    <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                                        <strong>Answer:</strong> Replace exact brute-force cosine matrix search with Approximate Nearest Neighbor (ANN) indexing like HNSW (Hierarchical Navigable Small World) in a distributed vector database (e.g. Pinecone, Milvus, Qdrant). Move document ingestion to Celery background task workers with Redis queues.
-                                    </p>
-                                </details>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 7: SETTINGS & BRAIN CONFIG -->
+            <!-- TAB 6: SETTINGS & BRAIN CONFIG -->
             <section class="tab-content" id="settings-tab">
                 <div class="solid-panel settings-panel">
                     <div class="panel-header">
@@ -661,9 +564,9 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <span>Search</span>
             </button>
-            <button class="bottom-nav-item" data-tab="viva-tab">
-                <i class="fa-solid fa-graduation-cap"></i>
-                <span>Viva</span>
+            <button class="bottom-nav-item" data-tab="arch-tab">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span>Flow</span>
             </button>
             <button class="bottom-nav-item" data-tab="tools-tab">
                 <i class="fa-solid fa-screwdriver-wrench"></i>

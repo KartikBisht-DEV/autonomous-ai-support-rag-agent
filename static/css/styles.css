@@ -4,8 +4,8 @@
    No Gradients • Crisp High-Contrast 2026 Engineering Aesthetic
    ========================================================================== */
 
-:root {
-    /* Solid Palette */
+:root, body.dark-theme {
+    /* Dark Theme (Default) */
     --bg-base: #090d16;
     --bg-surface: #111827;
     --bg-card: #162032;
@@ -48,6 +48,40 @@
     --radius-sm: 6px;
     --radius-full: 9999px;
     --bottom-nav-height: 62px;
+}
+
+body.light-theme {
+    /* Light Theme (Clean Crisp Minimalist) */
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-input: #f1f5f9;
+    
+    --border-color: #e2e8f0;
+    --border-light: #cbd5e1;
+    --border-focus: #16a34a;
+    
+    --color-green: #16a34a;
+    --color-green-dark: #15803d;
+    --color-green-bg: rgba(22, 163, 74, 0.1);
+    --color-green-border: rgba(22, 163, 74, 0.3);
+    
+    --color-yellow: #ca8a04;
+    --color-yellow-dark: #a16207;
+    --color-yellow-bg: rgba(202, 138, 4, 0.1);
+    --color-yellow-border: rgba(202, 138, 4, 0.3);
+    
+    --color-red: #dc2626;
+    --color-red-dark: #b91c1c;
+    --color-red-bg: rgba(220, 38, 38, 0.1);
+    --color-red-border: rgba(220, 38, 38, 0.3);
+    
+    --color-white: #0f172a;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --text-dark: #ffffff;
 }
 
 /* Reset */
