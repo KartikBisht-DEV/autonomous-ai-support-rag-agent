@@ -206,14 +206,23 @@ async def execute_tool(req: ToolExecutionRequest):
         raise HTTPException(status_code=400, detail=f"Unknown tool: {tool_name}")
 
 
-# Mount Static Frontend
-STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static")
-if os.path.exists(STATIC_DIR):
+# Robust Multi-Platform Static Frontend Resolution (Local, Docker, Render, Vercel)
+POSSIBLE_STATIC_DIRS = [
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "static"),
+    os.path.join(os.getcwd(), "static"),
+    os.path.abspath("static"),
+    "/var/task/static"
+]
+
+STATIC_DIR = next((d for d in POSSIBLE_STATIC_DIRS if os.path.exists(d)), None)
+
+if STATIC_DIR and os.path.exists(STATIC_DIR):
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/")
 async def serve_index():
-    index_file = os.path.join(STATIC_DIR, "index.html")
-    if os.path.exists(index_file):
-        return FileResponse(index_file)
-    return {"message": "Autonomous AI Support Agent Backend API is running."}
+    if STATIC_DIR:
+        index_file = os.path.join(STATIC_DIR, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+    return {"message": "Autonomous AI Support Agent Backend API is running. Check /api/health or mount /static."}

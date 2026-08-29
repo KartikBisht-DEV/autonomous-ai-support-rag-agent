@@ -130,6 +130,28 @@ Visit **[http://localhost:8000](http://localhost:8000)** in your browser.
 
 ---
 
+## ☁️ Deployment Guide
+
+### 🚀 Deploying to Render (Recommended for Full Python & Vector Services)
+1. Go to **[dashboard.render.com](https://dashboard.render.com)**.
+2. Click **New +** ➔ **Web Service**.
+3. Select your repository **`KartikBisht-DEV/autonomous-ai-support-rag-agent`**.
+4. Render will automatically detect `render.yaml` and `Procfile`:
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+5. Click **Deploy Web Service**.
+
+---
+
+### ▲ Deploying to Vercel
+1. Go to **[vercel.com/new](https://vercel.com/new)**.
+2. Import **`KartikBisht-DEV/autonomous-ai-support-rag-agent`**.
+3. Vercel automatically uses `vercel.json` and `api/index.py` serverless functions.
+4. Click **Deploy**.
+
+---
+
 ## 🧪 Sample Queries to Test
 
 | Query | What the Agent Does |
