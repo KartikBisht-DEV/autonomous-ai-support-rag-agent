@@ -2,348 +2,499 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#090d16">
+    <meta name="description" content="Autonomous AI Support Agent with RAG - Multi-stage Pipeline with Vector DB & Agentic Brain">
     <title>Autonomous AI Support Agent with RAG</title>
-    <!-- Fonts -->
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 Pro/Free Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body class="dark-theme">
+    <!-- Ambient Background Lighting Orbs -->
+    <div class="ambient-glow orb-1"></div>
+    <div class="ambient-glow orb-2"></div>
+    <div class="ambient-glow orb-3"></div>
+
     <div class="app-layout">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="brand-logo">
-                    <div class="logo-icon">
-                        <i class="fa-solid fa-robot"></i>
-                        <span class="pulse-dot"></span>
+        <!-- Mobile Header Bar -->
+        <header class="mobile-navbar">
+            <button class="icon-btn" id="mobile-menu-btn" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+            <div class="mobile-brand">
+                <div class="brand-badge-icon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <span class="brand-title">AutoAgent<span class="highlight-cyan">RAG</span></span>
+            </div>
+            <div class="mobile-status">
+                <span class="status-dot-pulse"></span>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation (Desktop & Drawer for Mobile) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-card">
+                    <div class="logo-container">
+                        <div class="logo-core">
+                            <i class="fa-solid fa-brain-circuit"></i>
+                        </div>
+                        <span class="status-ripple"></span>
                     </div>
-                    <div class="brand-text">
-                        <h2>AutoAgent<span class="brand-rag">RAG</span></h2>
-                        <span class="badge-sub">v1.0 Autonomous</span>
+                    <div class="brand-details">
+                        <h2 class="brand-name">AutoAgent<span class="highlight-cyan">RAG</span></h2>
+                        <span class="brand-tag">Enterprise Autonomous AI</span>
                     </div>
                 </div>
+                <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close Sidebar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
-            <nav class="nav-menu">
-                <button class="nav-item active" data-tab="chat-tab" id="nav-chat">
-                    <i class="fa-solid fa-message-dots"></i>
-                    <span>Live AI Support</span>
+            <!-- Main Navigation Links -->
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">PLATFORM MODULES</div>
+                
+                <button class="nav-link active" data-tab="chat-tab" id="nav-chat">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-messages"></i></div>
+                    <span class="nav-label">Live AI Support</span>
+                    <span class="nav-badge-pill live">Live</span>
                 </button>
-                <button class="nav-item" data-tab="kb-tab" id="nav-kb">
-                    <i class="fa-solid fa-book-bookmark"></i>
-                    <span>Knowledge Base</span>
-                    <span class="pill-count" id="sidebar-chunk-count">0</span>
+
+                <button class="nav-link" data-tab="kb-tab" id="nav-kb">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-book-sparkles"></i></div>
+                    <span class="nav-label">Knowledge Base</span>
+                    <span class="nav-badge-pill" id="sidebar-chunk-badge">5 Chunks</span>
                 </button>
-                <button class="nav-item" data-tab="search-tab" id="nav-search">
-                    <i class="fa-solid fa-bolt-lightning"></i>
-                    <span>Vector Search Sandbox</span>
+
+                <button class="nav-link" data-tab="search-tab" id="nav-search">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-wave-pulse"></i></div>
+                    <span class="nav-label">Vector Search Sandbox</span>
                 </button>
-                <button class="nav-item" data-tab="arch-tab" id="nav-arch">
-                    <i class="fa-solid fa-diagram-project"></i>
-                    <span>RAG Flow Architecture</span>
+
+                <button class="nav-link" data-tab="arch-tab" id="nav-arch">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-diagram-project"></i></div>
+                    <span class="nav-label">RAG Architecture</span>
                 </button>
-                <button class="nav-item" data-tab="tools-tab" id="nav-tools">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <span>Agent Tools & DB</span>
+
+                <button class="nav-link" data-tab="tools-tab" id="nav-tools">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <span class="nav-label">Agent Tools & Live DB</span>
                 </button>
-                <button class="nav-item" data-tab="settings-tab" id="nav-settings">
-                    <i class="fa-solid fa-sliders"></i>
-                    <span>Brain & Model Config</span>
+
+                <button class="nav-link" data-tab="settings-tab" id="nav-settings">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-sliders"></i></div>
+                    <span class="nav-label">Brain & Model Config</span>
                 </button>
             </nav>
 
-            <div class="sidebar-footer">
-                <div class="system-status-card">
-                    <div class="status-indicator">
-                        <span class="status-light online"></span>
-                        <span class="status-label">Vector Store Active</span>
+            <!-- Sidebar Live Status Card -->
+            <div class="sidebar-bottom">
+                <div class="glass-mini-card">
+                    <div class="status-header">
+                        <div class="status-ping">
+                            <span class="ping-circle"></span>
+                            <span class="ping-ring"></span>
+                        </div>
+                        <span class="status-name">Vector Engine Online</span>
                     </div>
-                    <div class="status-meta">
-                        <span id="active-model-tag">Provider: Local Semantic</span>
+                    <div class="status-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Latency</span>
+                            <span class="metric-val text-emerald">&lt; 15ms</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Active Provider</span>
+                            <span class="metric-val text-cyan" id="sidebar-active-provider">Local Engine</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Content Viewport -->
-        <main class="main-content">
-            <!-- Header Bar -->
-            <header class="topbar">
-                <div class="topbar-left">
-                    <h1 id="page-title">Autonomous AI Support Agent</h1>
-                    <p class="subtitle">Multi-stage RAG Pipeline • Ingestion ➔ Semantic Retrieval ➔ Agentic Brain ➔ Generation</p>
-                </div>
-                <div class="topbar-right">
-                    <div class="pill-badge" id="topbar-doc-badge">
-                        <i class="fa-solid fa-file-lines"></i>
-                        <span id="topbar-doc-count">5 Policy Docs</span>
+        <!-- Backdrop overlay for mobile drawer -->
+        <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+        <!-- Main Content Area -->
+        <main class="main-viewport">
+            <!-- Top Dashboard Header -->
+            <header class="dashboard-header">
+                <div class="header-titles">
+                    <div class="header-tag-row">
+                        <span class="glow-pill"><i class="fa-solid fa-shield-check"></i> Enterprise RAG Guardrails Active</span>
+                        <span class="glow-pill purple"><i class="fa-solid fa-microchip"></i> Hybrid Cosine + BM25</span>
                     </div>
-                    <button class="btn btn-secondary btn-sm" id="btn-quick-reset" title="Reset to default policies">
-                        <i class="fa-solid fa-rotate-right"></i> Reset KB
+                    <h1 class="page-title" id="page-title">Autonomous AI Support Agent</h1>
+                    <p class="page-subtitle">End-to-End ReAct Agentic Workflow • Stage 1 Ingestion ➔ Stage 2 Vector Retrieval ➔ Stage 3 Brain Orchestration ➔ Stage 4 Factual Generation</p>
+                </div>
+
+                <div class="header-actions">
+                    <button class="action-btn" id="btn-quick-reset" title="Reset Knowledge Base to default enterprise policies">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                        <span>Reset KB</span>
+                    </button>
+                    <button class="action-btn primary" id="btn-export-chat" title="Export conversation log">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Export Chat</span>
                     </button>
                 </div>
             </header>
 
-            <!-- TAB 1: Chat Assistant -->
-            <section class="tab-pane active" id="chat-tab">
-                <div class="chat-container">
-                    <div class="chat-messages" id="chat-messages">
-                        <!-- Welcome message injected by JS -->
+            <!-- TAB 1: LIVE AI SUPPORT CHAT -->
+            <section class="tab-content active" id="chat-tab">
+                <div class="chat-wrapper">
+                    <!-- Chat Message Stream -->
+                    <div class="chat-stream" id="chat-messages">
+                        <!-- Welcome message dynamically rendered -->
                     </div>
 
-                    <!-- Prompt suggestions -->
-                    <div class="quick-prompts-bar">
-                        <span class="quick-title"><i class="fa-solid fa-sparkles"></i> Try Asking:</span>
-                        <button class="chip-btn" data-query="Where is my order ORD-9821 and what is the tracking status?">📦 Track Order ORD-9821</button>
-                        <button class="chip-btn" data-query="Can I return my order ORD-9821 for a full refund?">💰 Refund ORD-9821</button>
-                        <button class="chip-btn" data-query="What is your return window policy and are there restocking fees?">📄 Return Policy & Fees</button>
-                        <button class="chip-btn" data-query="Check warranty status for SN-QT8892 and accidental damage coverage">🛡️ Check Warranty SN-QT8892</button>
-                        <button class="chip-btn" data-query="I am having a critical system outage, escalate this to a human manager immediately!">🚨 Escalate Outage</button>
-                    </div>
-
-                    <!-- Input Box -->
-                    <div class="chat-input-wrapper">
-                        <form id="chat-form" class="chat-form">
-                            <input 
-                                type="text" 
-                                id="user-input" 
-                                class="chat-input" 
-                                placeholder="Ask about policies, order tracking (e.g. ORD-9821), refunds, or escalate issues..." 
-                                autocomplete="off"
-                                required
-                            />
-                            <button type="submit" class="btn-send" id="btn-send">
-                                <i class="fa-solid fa-paper-plane"></i>
+                    <!-- Prompt Suggestion Carousel -->
+                    <div class="prompt-chips-container">
+                        <div class="prompt-chips-header">
+                            <i class="fa-solid fa-wand-magic-sparkles text-cyan"></i>
+                            <span>Suggested Inquiries:</span>
+                        </div>
+                        <div class="prompt-chips-scroll">
+                            <button class="prompt-chip" data-query="Where is my order ORD-9821 and what is the live carrier tracking status?">
+                                <span class="chip-icon">📦</span>
+                                <span class="chip-text">Track Order ORD-9821</span>
                             </button>
+                            <button class="prompt-chip" data-query="Can I return order ORD-9821 for a full refund? Please check policy and restocking fees.">
+                                <span class="chip-icon">💰</span>
+                                <span class="chip-text">Calculate Refund for ORD-9821</span>
+                            </button>
+                            <button class="prompt-chip" data-query="Check hardware warranty coverage for serial number SN-QT8892">
+                                <span class="chip-icon">🛡️</span>
+                                <span class="chip-text">Check Warranty SN-QT8892</span>
+                            </button>
+                            <button class="prompt-chip" data-query="What is your policy regarding international customs duties and European delivery times?">
+                                <span class="chip-icon">✈️</span>
+                                <span class="chip-text">International Duties & Shipping SLA</span>
+                            </button>
+                            <button class="prompt-chip alert" data-query="I am experiencing a critical system outage! Escalate this to an engineering manager immediately!">
+                                <span class="chip-icon">🚨</span>
+                                <span class="chip-text">Emergency SLA Escalation</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Bar -->
+                    <div class="chat-input-container">
+                        <form id="chat-form" class="chat-input-card">
+                            <div class="chat-input-inner">
+                                <div class="input-addon-left">
+                                    <i class="fa-solid fa-sparkles text-cyan"></i>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    id="user-input" 
+                                    class="chat-text-input" 
+                                    placeholder="Ask anything about orders, policies, warranties, or live escalations..." 
+                                    autocomplete="off"
+                                    required
+                                />
+                                <button type="submit" class="send-btn" id="btn-send" aria-label="Send Query">
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </section>
 
-            <!-- TAB 2: Knowledge Base & Ingestion -->
-            <section class="tab-pane" id="kb-tab">
-                <div class="kb-grid">
-                    <!-- Upload Dropzone -->
-                    <div class="card glass-card upload-card">
-                        <div class="card-header">
-                            <h3><i class="fa-solid fa-cloud-arrow-up"></i> Stage 1: Ingest Policy Data / PDFs</h3>
+            <!-- TAB 2: KNOWLEDGE BASE & INGESTION -->
+            <section class="tab-content" id="kb-tab">
+                <div class="module-layout-grid">
+                    <!-- Upload Dropzone Card -->
+                    <div class="glass-panel upload-panel">
+                        <div class="panel-header">
+                            <div class="panel-icon cyan"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                            <div>
+                                <h3 class="panel-title">Stage 1: Document Ingestion</h3>
+                                <p class="panel-desc">Ingest and chunk PDFs, Markdown, or raw text policies</p>
+                            </div>
                         </div>
-                        <div class="card-body">
+
+                        <div class="panel-body">
                             <form id="upload-form">
                                 <div class="dropzone" id="dropzone">
-                                    <i class="fa-solid fa-file-pdf dropzone-icon"></i>
-                                    <p class="dropzone-text">Drag & drop your <strong>PDF</strong>, <strong>Markdown</strong>, or <strong>Text</strong> document</p>
-                                    <span class="dropzone-sub">Automatic Chunking + Semantic Vector Embedding</span>
+                                    <div class="dropzone-art">
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                        <i class="fa-solid fa-file-lines"></i>
+                                        <i class="fa-solid fa-file-code"></i>
+                                    </div>
+                                    <h4 class="dropzone-title">Upload Policy Document</h4>
+                                    <p class="dropzone-subtitle">Drag and drop your <strong>PDF</strong>, <strong>MD</strong>, or <strong>TXT</strong> file here or click to browse</p>
+                                    <div class="dropzone-features">
+                                        <span><i class="fa-solid fa-scissors"></i> Recursive Sliding Window</span>
+                                        <span><i class="fa-solid fa-tag"></i> Auto Metadata Tagging</span>
+                                    </div>
                                     <input type="file" id="file-input" accept=".pdf,.txt,.md" hidden>
                                 </div>
-                                <div class="form-row">
-                                    <label for="doc-category">Document Category:</label>
-                                    <select id="doc-category" class="form-input">
-                                        <option value="Refund & Returns">Refund & Returns</option>
-                                        <option value="Shipping & Logistics">Shipping & Logistics</option>
-                                        <option value="Warranty & Hardware">Warranty & Hardware</option>
-                                        <option value="Subscription & Billing">Subscription & Billing</option>
-                                        <option value="Enterprise SLA">Enterprise SLA</option>
-                                        <option value="General Policy">General Policy</option>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="doc-category">Policy Category:</label>
+                                    <select id="doc-category" class="custom-select">
+                                        <option value="Refund & Returns">Refund & Returns Policy</option>
+                                        <option value="Shipping & Logistics">Shipping & Logistics Guidelines</option>
+                                        <option value="Warranty & Repairs">Hardware Warranty & Repair SLA</option>
+                                        <option value="Billing & Subscription">Subscription & Billing Terms</option>
+                                        <option value="Enterprise SLA">Enterprise Support SLA Matrix</option>
+                                        <option value="General Policy">General Knowledge Policy</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-block" id="btn-upload">
-                                    <i class="fa-solid fa-upload"></i> Process & Index Chunks
+
+                                <button type="submit" class="btn-primary btn-block" id="btn-upload">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    <span>Chunk & Embed into Vector DB</span>
                                 </button>
                             </form>
                         </div>
                     </div>
 
-                    <!-- Knowledge Base Chunks Inspector -->
-                    <div class="card glass-card chunks-card">
-                        <div class="card-header flex-between">
-                            <h3><i class="fa-solid fa-cubes-stacked"></i> Vector Index & Chunks Viewer</h3>
-                            <span class="badge" id="kb-total-chunks">0 Chunks</span>
+                    <!-- Chunks Inspector Card -->
+                    <div class="glass-panel chunks-panel">
+                        <div class="panel-header flex-between">
+                            <div class="panel-header-left">
+                                <div class="panel-icon purple"><i class="fa-solid fa-cubes-stacked"></i></div>
+                                <div>
+                                    <h3 class="panel-title">Vector Index Chunks</h3>
+                                    <p class="panel-desc">Semantic fragments stored in high-dimensional vector space</p>
+                                </div>
+                            </div>
+                            <span class="count-badge" id="kb-total-chunks-badge">5 Chunks</span>
                         </div>
-                        <div class="card-body">
-                            <div class="chunks-list" id="chunks-container">
-                                <!-- Chunks loaded here -->
+
+                        <div class="panel-body">
+                            <!-- Chunks filter search -->
+                            <div class="chunks-search-bar">
+                                <i class="fa-solid fa-filter"></i>
+                                <input type="text" id="chunks-filter-input" placeholder="Filter chunks by source name or keyword...">
+                            </div>
+
+                            <div class="chunks-scroll-list" id="chunks-container">
+                                <!-- Chunks rendered dynamically -->
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- TAB 3: Vector Search Sandbox -->
-            <section class="tab-pane" id="search-tab">
-                <div class="card glass-card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-bolt"></i> Stage 2: Semantic Vector Retrieval Sandbox</h3>
-                        <p class="card-subtitle">Test vector embedding similarity matching directly against ChromaDB/Vector store</p>
+            <!-- TAB 3: VECTOR SEARCH SANDBOX -->
+            <section class="tab-content" id="search-tab">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon cyan"><i class="fa-solid fa-wave-pulse"></i></div>
+                        <div>
+                            <h3 class="panel-title">Stage 2: Semantic Retrieval & Cosine Similarity Sandbox</h3>
+                            <p class="panel-desc">Directly query the Vector Database to inspect cosine distances, keyword BM25 overlap bonuses, and calibrated relevance matching.</p>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="search-input-group">
-                            <input type="text" id="sandbox-query" class="form-input" placeholder="Enter test query (e.g. 'restocking fee server hardware', 'international duty tax')...">
-                            <button class="btn btn-primary" id="btn-sandbox-search">
-                                <i class="fa-solid fa-magnifying-glass"></i> Search Vectors
+
+                    <div class="panel-body">
+                        <div class="sandbox-search-box">
+                            <div class="search-input-wrap">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="sandbox-query" class="sandbox-input" placeholder="Try: 'return window for hardware', 'international customs duty fees', 'Care+ repair turnaround'...">
+                            </div>
+                            <button class="btn-primary" id="btn-sandbox-search">
+                                <i class="fa-solid fa-bolt"></i> Search Vectors
                             </button>
                         </div>
 
-                        <div class="sandbox-results" id="sandbox-results">
-                            <div class="empty-state">
-                                <i class="fa-solid fa-magnifying-glass-chart"></i>
-                                <p>Enter a query above to inspect cosine similarity scores and retrieved context chunks.</p>
+                        <!-- Sandbox Query Results -->
+                        <div class="sandbox-results-grid" id="sandbox-results">
+                            <div class="empty-state-box">
+                                <div class="empty-icon"><i class="fa-solid fa-radar"></i></div>
+                                <h4>Vector Sandbox Ready</h4>
+                                <p>Type a semantic search query above to test chunk retrieval and observe calibrated match scores.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- TAB 4: Architecture Flow Diagram -->
-            <section class="tab-pane" id="arch-tab">
-                <div class="card glass-card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-diagram-project"></i> End-to-End RAG Agentic Pipeline</h3>
-                        <p class="card-subtitle">Detailed representation of the 4 Stages of the Autonomous Support System</p>
+            <!-- TAB 4: ARCHITECTURE FLOW -->
+            <section class="tab-content" id="arch-tab">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon purple"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div>
+                            <h3 class="panel-title">End-to-End RAG Flow Architecture</h3>
+                            <p class="panel-desc">Visual breakdown of data flow from document ingestion to grounded response rendering</p>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="arch-flow-container">
+
+                    <div class="panel-body">
+                        <!-- 4-Stage Flowchart -->
+                        <div class="flowchart-track">
                             <!-- Stage 1 -->
-                            <div class="arch-step-box">
-                                <div class="step-badge">Stage 1</div>
-                                <div class="step-icon"><i class="fa-solid fa-file-pdf"></i></div>
-                                <h4>Data Ingestion & Chunking</h4>
-                                <p>PDF/TXT policy ingestion, sliding window recursive token split with overlap.</p>
-                                <div class="step-tag">pypdf • Token Window</div>
+                            <div class="flow-card">
+                                <div class="flow-step-num">Stage 1</div>
+                                <div class="flow-card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                                <h4>Ingestion & Chunking</h4>
+                                <p>PDF/Text parsing with recursive sliding window token preservation.</p>
+                                <span class="flow-badge">350 Tokens • 60 Overlap</span>
                             </div>
-                            <div class="arch-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                            <div class="flow-connector"><i class="fa-solid fa-angles-right"></i></div>
 
                             <!-- Stage 1.5 -->
-                            <div class="arch-step-box">
-                                <div class="step-badge">Embeddings</div>
-                                <div class="step-icon"><i class="fa-solid fa-microchip"></i></div>
-                                <h4>Embedding Generation</h4>
-                                <p>Transforms chunks into high-dimensional vector representations.</p>
-                                <div class="step-tag">text-embedding-3 / Local</div>
+                            <div class="flow-card">
+                                <div class="flow-step-num">Embedding</div>
+                                <div class="flow-card-icon"><i class="fa-solid fa-microchip"></i></div>
+                                <h4>Vector Embeddings</h4>
+                                <p>Generates high-dimensional semantic dense representations.</p>
+                                <span class="flow-badge">Subword N-Gram / text-emb-3</span>
                             </div>
-                            <div class="arch-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                            <div class="flow-connector"><i class="fa-solid fa-angles-right"></i></div>
 
                             <!-- Stage 2 -->
-                            <div class="arch-step-box highlight">
-                                <div class="step-badge">Stage 2</div>
-                                <div class="step-icon"><i class="fa-solid fa-database"></i></div>
+                            <div class="flow-card highlight-cyan">
+                                <div class="flow-step-num">Stage 2</div>
+                                <div class="flow-card-icon"><i class="fa-solid fa-database"></i></div>
                                 <h4>Vector Database</h4>
-                                <p>Stores embeddings; executes cosine similarity search & metadata filtering.</p>
-                                <div class="step-tag">ChromaDB / FAISS / Vector Index</div>
+                                <p>Calculates cosine similarity and hybrid BM25 score reranking.</p>
+                                <span class="flow-badge">ChromaDB / Fast Vector Store</span>
                             </div>
-                            <div class="arch-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                            <div class="flow-connector"><i class="fa-solid fa-angles-right"></i></div>
 
                             <!-- Stage 3 -->
-                            <div class="arch-step-box highlight-brain">
-                                <div class="step-badge">Stage 3</div>
-                                <div class="step-icon"><i class="fa-solid fa-brain"></i></div>
-                                <h4>Agentic Brain (Orchestrator)</h4>
-                                <p>Intent recognition, autonomous tool calling (Orders, Refunds, Tickets), grounding guard.</p>
-                                <div class="step-tag">LangChain • ReAct Loop</div>
+                            <div class="flow-card highlight-purple">
+                                <div class="flow-step-num">Stage 3</div>
+                                <div class="flow-card-icon"><i class="fa-solid fa-brain"></i></div>
+                                <h4>Agentic Brain</h4>
+                                <p>Intent router, tool calling (Orders/Refunds), grounding guard.</p>
+                                <span class="flow-badge">LangChain • ReAct Loop</span>
                             </div>
-                            <div class="arch-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                            <div class="flow-connector"><i class="fa-solid fa-angles-right"></i></div>
 
                             <!-- Stage 4 -->
-                            <div class="arch-step-box">
-                                <div class="step-badge">Stage 4</div>
-                                <div class="step-icon"><i class="fa-solid fa-laptop-code"></i></div>
-                                <h4>Generation & UI Rendering</h4>
-                                <p>Synthesizes factual answer with citations and live thought tracing.</p>
-                                <div class="step-tag">Gemini / GPT-4o / Real-time UI</div>
+                            <div class="flow-card highlight-emerald">
+                                <div class="flow-step-num">Stage 4</div>
+                                <div class="flow-card-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                                <h4>Grounded Generation</h4>
+                                <p>Synthesizes factual answer with thought traces & source citations.</p>
+                                <span class="flow-badge">Gemini / GPT-4o / Local</span>
                             </div>
                         </div>
 
-                        <!-- Technical Deep Dive Table -->
-                        <div class="tech-stack-details">
-                            <h4>Pipeline Component Specifications</h4>
-                            <table class="styled-table">
-                                <thead>
-                                    <tr>
-                                        <th>Component</th>
-                                        <th>Role</th>
-                                        <th>Default / Available Models</th>
-                                        <th>Safety Guardrail / Fallback</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Ingestion Engine</strong></td>
-                                        <td>Text parsing & chunking</td>
-                                        <td>Recursive Paragraph Split (350 tokens, 60 overlap)</td>
-                                        <td>Sentence Boundary Preservation & Regex Splitting</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Vector Store</strong></td>
-                                        <td>High-dimensional indexing</td>
-                                        <td>Cosine VectorDB with BM25 Hybrid Boost</td>
-                                        <td>In-Memory Dense Matrix & BM25 Keyword Search</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Agentic Orchestrator</strong></td>
-                                        <td>ReAct Loop & Tool Router</td>
-                                        <td>Order DB, Refund Engine, SLA Escalator</td>
-                                        <td>Hardcoded Policy Fallback / Static System Response</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>LLM Provider</strong></td>
-                                        <td>Fact Synthesis</td>
-                                        <td>Gemini 2.0 Flash / OpenAI GPT-4o / Local</td>
-                                        <td>Rule-Based Policy Fallback / Template Synthesis</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <!-- Technical Deep-Dive Table -->
+                        <div class="table-card-wrapper">
+                            <h4 class="table-heading"><i class="fa-solid fa-table-list"></i> Pipeline Component Specifications</h4>
+                            <div class="table-responsive">
+                                <table class="custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Component</th>
+                                            <th>Role</th>
+                                            <th>Engine / Model</th>
+                                            <th>Safety Guardrail / Fallback</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Ingestion Engine</strong></td>
+                                            <td>Document parsing & sliding chunking</td>
+                                            <td>Recursive Token Split (350 tokens, 60 overlap)</td>
+                                            <td><span class="tag-badge">Sentence Boundary Preservation & Regex Splitting</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Vector Store</strong></td>
+                                            <td>High-dimensional indexing & retrieval</td>
+                                            <td>Cosine VectorDB with BM25 Hybrid Boost</td>
+                                            <td><span class="tag-badge">In-Memory Dense Matrix & BM25 Keyword Search</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Agentic Orchestrator</strong></td>
+                                            <td>ReAct Loop, Tool Dispatch & Reasoning</td>
+                                            <td>Order DB, Refund Engine, SLA Escalator</td>
+                                            <td><span class="tag-badge">Hardcoded Policy Fallback / Static System Response</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>LLM Provider</strong></td>
+                                            <td>Fact Grounding & Context Synthesis</td>
+                                            <td>Gemini 2.0 Flash / OpenAI GPT-4o / Local</td>
+                                            <td><span class="tag-badge">Rule-Based Policy Fallback / Template Synthesis</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- TAB 5: Tools & Live DB -->
-            <section class="tab-pane" id="tools-tab">
-                <div class="tools-grid">
-                    <!-- Mock Orders Database Viewer -->
-                    <div class="card glass-card">
-                        <div class="card-header">
-                            <h3><i class="fa-solid fa-database"></i> Customer & Order Records (Live Tool Source)</h3>
+            <!-- TAB 5: AGENT TOOLS & LIVE DB -->
+            <section class="tab-content" id="tools-tab">
+                <div class="module-layout-grid">
+                    <!-- Customer DB Viewer -->
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-icon cyan"><i class="fa-solid fa-server"></i></div>
+                            <div>
+                                <h3 class="panel-title">Customer & Order Records</h3>
+                                <p class="panel-desc">Real-time mock database accessible to autonomous agent tools</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="orders-table-wrapper" id="orders-container">
+                        <div class="panel-body">
+                            <div class="orders-scroll-list" id="orders-container">
                                 <!-- Rendered dynamically -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Direct Tool Execution Sandbox -->
-                    <div class="card glass-card">
-                        <div class="card-header">
-                            <h3><i class="fa-solid fa-terminal"></i> Autonomous Tool Execution Tester</h3>
+                    <!-- Autonomous Tool Sandbox -->
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-icon emerald"><i class="fa-solid fa-terminal"></i></div>
+                            <div>
+                                <h3 class="panel-title">Agent Tool Execution Sandbox</h3>
+                                <p class="panel-desc">Execute tool functions directly and inspect structured JSON payloads</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="tool-tester-form">
-                                <label>Select Autonomous Tool:</label>
-                                <select id="tool-select" class="form-input">
-                                    <option value="lookup_order">lookup_order(order_id)</option>
-                                    <option value="calculate_refund">calculate_refund(order_id, reason)</option>
-                                    <option value="check_warranty">check_warranty(serial_number)</option>
-                                    <option value="escalate_ticket">escalate_ticket(customer_email, severity)</option>
-                                </select>
-
-                                <div class="tool-param-field" id="tool-param-container">
-                                    <label>Order ID:</label>
-                                    <input type="text" id="tool-param-input" class="form-input" value="ORD-9821">
+                        <div class="panel-body">
+                            <div class="tool-tester-wrapper">
+                                <div class="form-group">
+                                    <label class="form-label">Select Agent Tool:</label>
+                                    <select id="tool-select" class="custom-select">
+                                        <option value="lookup_order">lookup_order(order_id)</option>
+                                        <option value="calculate_refund">calculate_refund(order_id, reason)</option>
+                                        <option value="check_warranty">check_warranty(serial_number)</option>
+                                        <option value="escalate_ticket">escalate_ticket(customer_email, severity)</option>
+                                    </select>
                                 </div>
 
-                                <button class="btn btn-primary btn-block" id="btn-run-tool">
-                                    <i class="fa-solid fa-play"></i> Execute Tool Function
+                                <div class="form-group" id="tool-param-container">
+                                    <label class="form-label">Order ID:</label>
+                                    <input type="text" id="tool-param-input" class="custom-input" value="ORD-9821">
+                                </div>
+
+                                <button class="btn-primary btn-block" id="btn-run-tool">
+                                    <i class="fa-solid fa-play"></i> Execute Function
                                 </button>
 
-                                <div class="tool-output-box" id="tool-output">
-                                    <pre>Tool output will appear here...</pre>
+                                <div class="terminal-box" id="tool-output">
+                                    <div class="terminal-bar">
+                                        <span class="terminal-dot red"></span>
+                                        <span class="terminal-dot yellow"></span>
+                                        <span class="terminal-dot green"></span>
+                                        <span class="terminal-title">output.json</span>
+                                    </div>
+                                    <pre class="terminal-content">Click "Execute Function" to run tool...</pre>
                                 </div>
                             </div>
                         </div>
@@ -351,59 +502,97 @@
                 </div>
             </section>
 
-            <!-- TAB 6: Settings -->
-            <section class="tab-pane" id="settings-tab">
-                <div class="card glass-card settings-card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-sliders"></i> Brain Configuration & API Provider</h3>
+            <!-- TAB 6: SETTINGS & BRAIN CONFIG -->
+            <section class="tab-content" id="settings-tab">
+                <div class="glass-panel settings-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon cyan"><i class="fa-solid fa-sliders"></i></div>
+                        <div>
+                            <h3 class="panel-title">Agent Brain & LLM Configuration</h3>
+                            <p class="panel-desc">Configure LLM providers, API keys, and custom system instructions</p>
+                        </div>
                     </div>
-                    <div class="card-body">
+
+                    <div class="panel-body">
                         <form id="settings-form">
                             <div class="form-group">
-                                <label for="llm-provider-select">Active LLM Brain Provider:</label>
-                                <select id="llm-provider-select" class="form-input">
-                                    <option value="local">Local Grounded Deterministic Engine (Zero API Key Needed / Offline)</option>
+                                <label class="form-label" for="llm-provider-select">Active LLM Provider:</label>
+                                <select id="llm-provider-select" class="custom-select">
+                                    <option value="local">Local Grounded Deterministic Engine (Offline / Zero API Key Needed)</option>
                                     <option value="gemini">Google Gemini (Gemini 2.0 Flash / 1.5 Pro)</option>
                                     <option value="openai">OpenAI (GPT-4o / GPT-4o-mini)</option>
                                 </select>
                             </div>
 
                             <div class="form-group" id="api-key-group" style="display: none;">
-                                <label for="api-key-input">API Key:</label>
-                                <input type="password" id="api-key-input" class="form-input" placeholder="Enter your OpenAI or Gemini API Key...">
-                                <span class="form-hint">Stored securely in your local browser session storage.</span>
+                                <label class="form-label" for="api-key-input">API Key:</label>
+                                <input type="password" id="api-key-input" class="custom-input" placeholder="Paste your OpenAI or Google Gemini API key...">
+                                <span class="form-helper">Stored securely in your local browser session storage.</span>
                             </div>
 
                             <div class="form-group">
-                                <label for="system-prompt-input">Agent System Persona & Guidelines:</label>
-                                <textarea id="system-prompt-input" class="form-textarea" rows="4">You are an Autonomous AI Customer Support Agent with RAG. You provide accurate, factual, and empathetic assistance grounded strictly in company policies and live system records. Always cite policy sources.</textarea>
+                                <label class="form-label" for="system-prompt-input">Agent Persona & System Prompt:</label>
+                                <textarea id="system-prompt-input" class="custom-textarea" rows="4">You are an Autonomous AI Customer Support Agent with RAG. You provide accurate, factual, and empathetic assistance grounded strictly in company policies and live system records. Always cite policy sources.</textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary" id="btn-save-settings">
-                                <i class="fa-solid fa-floppy-disk"></i> Save Configuration
+                            <button type="submit" class="btn-primary" id="btn-save-settings">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Settings
                             </button>
                         </form>
                     </div>
                 </div>
             </section>
         </main>
+
+        <!-- Mobile Bottom Navigation Bar -->
+        <nav class="mobile-bottom-nav">
+            <button class="bottom-nav-item active" data-tab="chat-tab">
+                <i class="fa-solid fa-messages"></i>
+                <span>Chat</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="kb-tab">
+                <i class="fa-solid fa-book-sparkles"></i>
+                <span>Docs</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="search-tab">
+                <i class="fa-solid fa-wave-pulse"></i>
+                <span>Search</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="arch-tab">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span>Flow</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="tools-tab">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+                <span>Tools</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="settings-tab">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Config</span>
+            </button>
+        </nav>
     </div>
 
-    <!-- Modals -->
-    <div class="modal-backdrop" id="citation-modal" style="display: none;">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 id="modal-title">Source Policy Document</h3>
-                <button class="modal-close" id="btn-close-modal">&times;</button>
+    <!-- Slide-over Citation & Source Inspector Modal -->
+    <div class="modal-overlay" id="citation-modal" style="display: none;">
+        <div class="modal-window">
+            <div class="modal-top">
+                <div class="modal-title-group">
+                    <i class="fa-solid fa-file-lines text-purple"></i>
+                    <h3 id="modal-title">Source Policy Document</h3>
+                </div>
+                <button class="modal-close-icon" id="btn-close-modal" aria-label="Close modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="modal-meta" id="modal-meta"></div>
-                <div class="modal-text" id="modal-content"></div>
+            <div class="modal-meta-bar" id="modal-meta">
+                <!-- Injected via JS -->
+            </div>
+            <div class="modal-scroll-body" id="modal-content">
+                <!-- Injected via JS -->
             </div>
         </div>
     </div>
 
-    <!-- JS Scripts -->
+    <!-- Main JS Application Script -->
     <script src="/static/js/app.js"></script>
 </body>
 </html>

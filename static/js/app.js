@@ -1,3 +1,7 @@
+/**
+ * Autonomous AI Support Agent with RAG - App Controller
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
     // App State
     const state = {
@@ -7,28 +11,39 @@ document.addEventListener("DOMContentLoaded", () => {
         systemPrompt: localStorage.getItem("rag_sys_prompt") || "You are an Autonomous AI Customer Support Agent with RAG. You provide accurate, factual assistance grounded strictly in company policies.",
         userEmail: "bishtkartik2005@gmail.com",
         chunks: [],
-        stats: null
+        stats: null,
+        chatHistory: []
     };
 
-    // DOM Elements
-    const navItems = document.querySelectorAll(".nav-item");
-    const tabPanes = document.querySelectorAll(".tab-pane");
+    // DOM Elements - Navigation
+    const navLinks = document.querySelectorAll(".nav-link");
+    const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
+    const tabPanes = document.querySelectorAll(".tab-content");
+    const sidebar = document.getElementById("sidebar");
+    const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+    const sidebarCloseBtn = document.getElementById("sidebar-close-btn");
+    const drawerBackdrop = document.getElementById("drawer-backdrop");
+
+    // Chat Elements
     const chatForm = document.getElementById("chat-form");
     const userInput = document.getElementById("user-input");
     const chatMessages = document.getElementById("chat-messages");
-    const chipBtns = document.querySelectorAll(".chip-btn");
+    const promptChips = document.querySelectorAll(".prompt-chip");
+    const btnExportChat = document.getElementById("btn-export-chat");
+
+    // Knowledge Base Elements
     const chunksContainer = document.getElementById("chunks-container");
-    const sidebarChunkCount = document.getElementById("sidebar-chunk-count");
-    const topbarDocCount = document.getElementById("topbar-doc-count");
-    const kbTotalChunks = document.getElementById("kb-total-chunks");
+    const chunksFilterInput = document.getElementById("chunks-filter-input");
+    const sidebarChunkBadge = document.getElementById("sidebar-chunk-badge");
+    const kbTotalChunksBadge = document.getElementById("kb-total-chunks-badge");
     const uploadForm = document.getElementById("upload-form");
     const fileInput = document.getElementById("file-input");
     const dropzone = document.getElementById("dropzone");
     const docCategory = document.getElementById("doc-category");
     const btnQuickReset = document.getElementById("btn-quick-reset");
-    const activeModelTag = document.getElementById("active-model-tag");
+    const sidebarActiveProvider = document.getElementById("sidebar-active-provider");
 
-    // Sandbox Elements
+    // Vector Sandbox Elements
     const sandboxQuery = document.getElementById("sandbox-query");
     const btnSandboxSearch = document.getElementById("btn-sandbox-search");
     const sandboxResults = document.getElementById("sandbox-results");
@@ -47,30 +62,62 @@ document.addEventListener("DOMContentLoaded", () => {
     const apiKeyInput = document.getElementById("api-key-input");
     const systemPromptInput = document.getElementById("system-prompt-input");
 
-    // Modal
+    // Citation Modal
     const citationModal = document.getElementById("citation-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalMeta = document.getElementById("modal-meta");
     const modalContent = document.getElementById("modal-content");
     const btnCloseModal = document.getElementById("btn-close-modal");
 
-    // 1. Tab Navigation
-    navItems.forEach(item => {
-        item.addEventListener("click", () => {
-            const target = item.getAttribute("data-tab");
-            navItems.forEach(n => n.classList.remove("active"));
-            tabPanes.forEach(p => p.classList.remove("active"));
+    // 1. Navigation Controller (Desktop & Mobile Sync)
+    function switchTab(targetTabId) {
+        state.activeTab = targetTabId;
 
-            item.classList.add("active");
-            document.getElementById(target).classList.add("active");
-            state.activeTab = target;
-
-            if (target === "kb-tab") loadKnowledgeBase();
-            if (target === "tools-tab") loadToolsData();
+        // Update Desktop Nav
+        navLinks.forEach(l => {
+            if (l.getAttribute("data-tab") === targetTabId) l.classList.add("active");
+            else l.classList.remove("active");
         });
-    });
 
-    // 2. Initial Setup & Welcome Message
+        // Update Mobile Bottom Nav
+        bottomNavItems.forEach(b => {
+            if (b.getAttribute("data-tab") === targetTabId) b.classList.add("active");
+            else b.classList.remove("active");
+        });
+
+        // Switch Active Panes
+        tabPanes.forEach(pane => {
+            if (pane.id === targetTabId) pane.classList.add("active");
+            else pane.classList.remove("active");
+        });
+
+        // Close mobile drawer if open
+        closeMobileDrawer();
+
+        // Trigger on-demand loads
+        if (targetTabId === "kb-tab") loadKnowledgeBase();
+        if (targetTabId === "tools-tab") loadToolsData();
+    }
+
+    navLinks.forEach(l => l.addEventListener("click", () => switchTab(l.getAttribute("data-tab"))));
+    bottomNavItems.forEach(b => b.addEventListener("click", () => switchTab(b.getAttribute("data-tab"))));
+
+    // Mobile Drawer Handlers
+    function openMobileDrawer() {
+        sidebar.classList.add("open");
+        drawerBackdrop.classList.add("active");
+    }
+
+    function closeMobileDrawer() {
+        sidebar.classList.remove("open");
+        drawerBackdrop.classList.remove("active");
+    }
+
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener("click", openMobileDrawer);
+    if (sidebarCloseBtn) sidebarCloseBtn.addEventListener("click", closeMobileDrawer);
+    if (drawerBackdrop) drawerBackdrop.addEventListener("click", closeMobileDrawer);
+
+    // 2. Initialization & Welcome Setup
     function init() {
         llmProviderSelect.value = state.llmProvider;
         apiKeyInput.value = state.apiKey;
@@ -78,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateProviderUI();
 
         appendBotMessage({
-            response: `👋 **Welcome to the Autonomous AI Support Agent with RAG!**\n\nI am connected to your enterprise knowledge base and real-time order/billing systems. I can help you with:\n- 📦 **Order & Shipment Tracking** (e.g. \`ORD-9821\`, \`ORD-4412\`)\n- 💰 **Automated Refund & Return Evaluations**\n- 🛡️ **Hardware Warranty Verification** (e.g. \`SN-QT8892\`)\n- 🚨 **Autonomous Escalation & Ticket Creation**\n\nSelect one of the suggested prompts below or type any question to begin!`,
+            response: `👋 **Welcome to the Autonomous AI Support Agent with RAG!**\n\nI am connected to your enterprise knowledge base and real-time order/billing systems. I can help you with:\n- 📦 **Order & Carrier Tracking** (e.g. \`ORD-9821\`, \`ORD-4412\`)\n- 💰 **Automated Refund & Return Evaluations** (e.g. \`Can I get a refund for ORD-9821?\`)\n- 🛡️ **Hardware Warranty Verification** (e.g. \`SN-QT8892\`)\n- 🚨 **Autonomous Escalation & Ticket Creation**\n\nSelect one of the suggested prompts below or type any question to begin!`,
             thought_steps: [
                 {
                     step: 1,
@@ -96,13 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateProviderUI() {
         if (state.llmProvider === "local") {
             apiKeyGroup.style.display = "none";
-            activeModelTag.textContent = "Provider: Local Grounded Engine";
+            sidebarActiveProvider.textContent = "Local Engine";
         } else if (state.llmProvider === "gemini") {
             apiKeyGroup.style.display = "block";
-            activeModelTag.textContent = "Provider: Google Gemini 2.0";
+            sidebarActiveProvider.textContent = "Gemini 2.0 Flash";
         } else if (state.llmProvider === "openai") {
             apiKeyGroup.style.display = "block";
-            activeModelTag.textContent = "Provider: OpenAI GPT-4o";
+            sidebarActiveProvider.textContent = "OpenAI GPT-4o";
         }
     }
 
@@ -153,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (resp.ok) {
                 appendBotMessage(data);
+                state.chatHistory.push({ role: "assistant", content: data.response, timestamp: new Date().toISOString() });
             } else {
                 appendBotMessage({
                     response: `⚠️ **Error Processing Request**: ${data.detail || "Server error occurred."}`,
@@ -171,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Quick Prompts
-    chipBtns.forEach(btn => {
+    promptChips.forEach(btn => {
         btn.addEventListener("click", () => {
             userInput.value = btn.getAttribute("data-query");
             chatForm.dispatchEvent(new Event("submit"));
@@ -179,13 +227,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function appendUserMessage(text) {
+        state.chatHistory.push({ role: "user", content: text, timestamp: new Date().toISOString() });
         const row = document.createElement("div");
-        row.className = "message-row user-row";
+        row.className = "msg-row user";
         row.innerHTML = `
-            <div class="message-bubble-wrapper">
-                <div class="message-bubble">${escapeHtml(text)}</div>
+            <div class="msg-bubble-container">
+                <div class="msg-bubble">${escapeHtml(text)}</div>
             </div>
-            <div class="avatar user"><i class="fa-solid fa-user"></i></div>
+            <div class="msg-avatar user"><i class="fa-solid fa-user"></i></div>
         `;
         chatMessages.appendChild(row);
         scrollToBottom();
@@ -194,15 +243,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function appendLoadingIndicator() {
         const id = "loading-" + Date.now();
         const row = document.createElement("div");
-        row.className = "message-row bot-row";
+        row.className = "msg-row bot";
         row.id = id;
         row.innerHTML = `
-            <div class="avatar bot"><i class="fa-solid fa-robot"></i></div>
-            <div class="message-bubble-wrapper">
-                <div class="message-bubble">
-                    <div style="display: flex; align-items: center; gap: 8px; color: var(--primary);">
+            <div class="msg-avatar bot"><i class="fa-solid fa-robot"></i></div>
+            <div class="msg-bubble-container">
+                <div class="msg-bubble">
+                    <div style="display: flex; align-items: center; gap: 10px; color: var(--cyan);">
                         <i class="fa-solid fa-circle-notch fa-spin"></i>
-                        <span>Autonomous Agent Orchestrating RAG Pipeline...</span>
+                        <span>Agentic Brain Orchestrating RAG Multi-Stage Pipeline...</span>
                     </div>
                 </div>
             </div>
@@ -219,21 +268,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function appendBotMessage(data) {
         const row = document.createElement("div");
-        row.className = "message-row bot-row";
+        row.className = "msg-row bot";
 
         let thoughtsHtml = "";
         if (data.thought_steps && data.thought_steps.length > 0) {
             thoughtsHtml = `
-                <div class="thought-box">
-                    <div class="thought-header" onclick="this.parentElement.querySelector('.thought-content').classList.toggle('hidden')">
-                        <span><i class="fa-solid fa-brain"></i> Agentic Thought Trace (${data.thought_steps.length} Steps) • ${data.execution_time_seconds ? data.execution_time_seconds + 's' : '0.04s'}</span>
+                <div class="thought-card">
+                    <div class="thought-header-btn" onclick="this.parentElement.querySelector('.thought-body').classList.toggle('hidden')">
+                        <span><i class="fa-solid fa-brain"></i> Agentic Thought Trace (${data.thought_steps.length} Steps) • ${data.execution_time_seconds ? data.execution_time_seconds + 's' : '< 0.05s'}</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
-                    <div class="thought-content">
+                    <div class="thought-body">
                         ${data.thought_steps.map(s => `
-                            <div class="thought-step-item">
+                            <div class="thought-step">
                                 <i class="fa-solid fa-check-circle"></i>
-                                <div><strong>${s.title}:</strong> ${s.description}</div>
+                                <div><strong>${escapeHtml(s.title)}:</strong> ${escapeHtml(s.description)}</div>
                             </div>
                         `).join("")}
                     </div>
@@ -244,10 +293,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let citationsHtml = "";
         if (data.citations && data.citations.length > 0) {
             citationsHtml = `
-                <div class="citations-bar">
-                    <span style="font-size: 0.72rem; color: var(--text-dim); margin-right: 4px;"><i class="fa-solid fa-bookmark"></i> Sources:</span>
+                <div class="citations-footer">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-bookmark"></i> Grounded Citations:</span>
                     ${data.citations.map(c => `
-                        <button class="citation-chip" onclick="showCitationModal('${escapeHtml(c.source)}', '${c.category || 'Policy'}', ${c.score || 0.95})">
+                        <button class="citation-badge-btn" onclick="showCitationModal('${escapeHtml(c.source)}', '${escapeHtml(c.category || 'Policy')}', ${c.score || 0.95})">
                             <i class="fa-solid fa-file-lines"></i> ${escapeHtml(c.source)}
                         </button>
                     `).join("")}
@@ -256,10 +305,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         row.innerHTML = `
-            <div class="avatar bot"><i class="fa-solid fa-robot"></i></div>
-            <div class="message-bubble-wrapper">
+            <div class="msg-avatar bot"><i class="fa-solid fa-robot"></i></div>
+            <div class="msg-bubble-container">
                 ${thoughtsHtml}
-                <div class="message-bubble">${renderMarkdown(data.response || "")}</div>
+                <div class="msg-bubble">${renderMarkdown(data.response || "")}</div>
                 ${citationsHtml}
             </div>
         `;
@@ -269,6 +318,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function scrollToBottom() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Export Chat History
+    if (btnExportChat) {
+        btnExportChat.addEventListener("click", () => {
+            const blob = new Blob([JSON.stringify(state.chatHistory, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `chat-transcript-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
     }
 
     // 4. Knowledge Base Operations
@@ -285,9 +347,8 @@ document.addEventListener("DOMContentLoaded", () => {
             state.stats = stats;
             state.chunks = chunks;
 
-            sidebarChunkCount.textContent = stats.total_chunks;
-            topbarDocCount.textContent = `${stats.total_sources} Policy Docs`;
-            kbTotalChunks.textContent = `${stats.total_chunks} Chunks`;
+            if (sidebarChunkBadge) sidebarChunkBadge.textContent = `${stats.total_chunks} Chunks`;
+            if (kbTotalChunksBadge) kbTotalChunksBadge.textContent = `${stats.total_chunks} Chunks`;
 
             renderChunksList(chunks);
         } catch (err) {
@@ -297,33 +358,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderChunksList(chunks) {
         if (!chunks || chunks.length === 0) {
-            chunksContainer.innerHTML = `<div class="empty-state"><p>No chunks found in Vector Store.</p></div>`;
+            chunksContainer.innerHTML = `<div class="empty-state-box"><p>No chunks in vector store.</p></div>`;
             return;
         }
 
         chunksContainer.innerHTML = chunks.map((c, idx) => `
-            <div class="chunk-card">
-                <div class="chunk-header">
-                    <span class="chunk-source"><i class="fa-solid fa-file"></i> ${escapeHtml(c.metadata.source || 'Doc')}</span>
-                    <span class="chunk-badge">${escapeHtml(c.metadata.category || 'General')} • Chunk #${c.metadata.chunk_index || idx+1}</span>
+            <div class="chunk-card-item">
+                <div class="chunk-top-row">
+                    <span class="chunk-title"><i class="fa-solid fa-file-lines"></i> ${escapeHtml(c.metadata.source || 'Doc')}</span>
+                    <span class="chunk-category-tag">${escapeHtml(c.metadata.category || 'General')} • Chunk #${c.metadata.chunk_index || idx+1}</span>
                 </div>
-                <div class="chunk-body">
+                <div class="chunk-text-snippet">
                     ${escapeHtml(c.text)}
                 </div>
-                <div style="margin-top: 8px; font-size: 0.7rem; color: var(--text-dim);">
-                    Est. Tokens: ${c.token_estimate || 80} | Chunk ID: <code>${c.chunk_id}</code>
+                <div style="margin-top: 8px; font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">
+                    Tokens: ~${c.token_estimate || 80} | Chunk ID: <code>${c.chunk_id}</code>
                 </div>
             </div>
         `).join("");
     }
 
+    if (chunksFilterInput) {
+        chunksFilterInput.addEventListener("input", (e) => {
+            const val = e.target.value.toLowerCase().trim();
+            if (!val) {
+                renderChunksList(state.chunks);
+                return;
+            }
+            const filtered = state.chunks.filter(c => 
+                (c.metadata.source && c.metadata.source.toLowerCase().includes(val)) ||
+                (c.text && c.text.toLowerCase().includes(val)) ||
+                (c.metadata.category && c.metadata.category.toLowerCase().includes(val))
+            );
+            renderChunksList(filtered);
+        });
+    }
+
     // Dropzone & File Upload
     dropzone.addEventListener("click", () => fileInput.click());
-    dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.style.borderColor = "var(--primary)"; });
-    dropzone.addEventListener("dragleave", () => { dropzone.style.borderColor = "rgba(6, 182, 212, 0.35)"; });
+    dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.style.borderColor = "var(--cyan)"; });
+    dropzone.addEventListener("dragleave", () => { dropzone.style.borderColor = "rgba(6, 182, 212, 0.4)"; });
     dropzone.addEventListener("drop", (e) => {
         e.preventDefault();
-        dropzone.style.borderColor = "rgba(6, 182, 212, 0.35)";
+        dropzone.style.borderColor = "rgba(6, 182, 212, 0.4)";
         if (e.dataTransfer.files.length) {
             fileInput.files = e.dataTransfer.files;
             handleFileSelection();
@@ -334,7 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleFileSelection() {
         if (fileInput.files.length > 0) {
-            dropzone.querySelector(".dropzone-text").innerHTML = `Selected: <strong>${escapeHtml(fileInput.files[0].name)}</strong>`;
+            dropzone.querySelector(".dropzone-subtitle").innerHTML = `Selected: <strong>${escapeHtml(fileInput.files[0].name)}</strong>`;
         }
     }
 
@@ -350,7 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("category", docCategory.value);
 
         const btnUpload = document.getElementById("btn-upload");
-        btnUpload.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing & Chunking...`;
+        btnUpload.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Ingesting & Chunking...`;
         btnUpload.disabled = true;
 
         try {
@@ -362,7 +439,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (resp.ok) {
                 alert(`Success! Created ${data.chunks_created} vector chunks from '${data.filename}'.`);
                 fileInput.value = "";
-                dropzone.querySelector(".dropzone-text").innerHTML = `Drag & drop your <strong>PDF</strong>, <strong>Markdown</strong>, or <strong>Text</strong> document`;
+                dropzone.querySelector(".dropzone-subtitle").innerHTML = `Drag and drop your <strong>PDF</strong>, <strong>MD</strong>, or <strong>TXT</strong> file here`;
                 loadKnowledgeBase();
             } else {
                 alert(`Upload failed: ${data.detail}`);
@@ -370,7 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
             alert("Network error while uploading file.");
         } finally {
-            btnUpload.innerHTML = `<i class="fa-solid fa-upload"></i> Process & Index Chunks`;
+            btnUpload.innerHTML = `<i class="fa-solid fa-bolt"></i> <span>Chunk & Embed into Vector DB</span>`;
             btnUpload.disabled = false;
         }
     });
@@ -389,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const query = sandboxQuery.value.trim();
         if (!query) return;
 
-        sandboxResults.innerHTML = `<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i><p>Calculating vector cosine similarities...</p></div>`;
+        sandboxResults.innerHTML = `<div class="empty-state-box"><i class="fa-solid fa-circle-notch fa-spin empty-icon"></i><p>Calculating high-dimensional cosine similarity...</p></div>`;
 
         try {
             const resp = await fetch("/api/kb/search", {
@@ -400,7 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await resp.json();
 
             if (data.results.length === 0) {
-                sandboxResults.innerHTML = `<div class="empty-state"><p>No relevant vector matches found above threshold.</p></div>`;
+                sandboxResults.innerHTML = `<div class="empty-state-box"><p>No relevant vector matches found above threshold.</p></div>`;
                 return;
             }
 
@@ -411,17 +488,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 const icon = relevancePct >= 85 ? "fa-circle-check" : "fa-circle-info";
 
                 return `
-                    <div class="search-result-card">
-                        <div class="search-result-top">
+                    <div class="result-card">
+                        <div class="result-card-top">
                             <div>
                                 <strong>#${idx+1} ${escapeHtml(r.metadata.source || 'Policy Document')}</strong>
-                                <span style="font-size: 0.75rem; color: var(--text-dim); margin-left: 8px;">Category: ${escapeHtml(r.metadata.category || 'General')}</span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 8px;">Category: ${escapeHtml(r.metadata.category || 'General')}</span>
                             </div>
                             <div class="score-badge ${tierClass}">
                                 <i class="fa-solid ${icon}"></i> ${tier} (${relevancePct}% Match)
                             </div>
                         </div>
-                        <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">${escapeHtml(r.text)}</p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">${escapeHtml(r.text)}</p>
                         <div class="score-meter">
                             <div class="score-meter-fill ${tierClass}" style="width: ${Math.min(100, relevancePct)}%;"></div>
                         </div>
@@ -429,7 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             }).join("");
         } catch (err) {
-            sandboxResults.innerHTML = `<div class="empty-state"><p>Failed to execute search query.</p></div>`;
+            sandboxResults.innerHTML = `<div class="empty-state-box"><p>Failed to execute search query.</p></div>`;
         }
     });
 
@@ -440,14 +517,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const orders = await resp.json();
 
             ordersContainer.innerHTML = Object.values(orders).map(o => `
-                <div class="order-row-card">
+                <div class="order-entry-card">
                     <div class="flex-between">
                         <strong>${o.order_id} • ${escapeHtml(o.customer_name)}</strong>
-                        <span class="chunk-badge">${o.tier}</span>
+                        <span class="count-badge">${o.tier}</span>
                     </div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">
+                    <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 8px;">
                         <div><strong>Item:</strong> ${escapeHtml(o.product)} ($${o.amount_usd})</div>
-                        <div><strong>Status:</strong> ${o.status} | <strong>Carrier:</strong> ${o.carrier} (${o.tracking_code})</div>
+                        <div><strong>Status:</strong> <span class="text-emerald">${o.status}</span> | <strong>Carrier:</strong> ${o.carrier} (<code>${o.tracking_code}</code>)</div>
                         <div><strong>Warranty:</strong> ${o.warranty_type}</div>
                     </div>
                 </div>
@@ -460,19 +537,20 @@ document.addEventListener("DOMContentLoaded", () => {
     toolSelect.addEventListener("change", (e) => {
         const val = e.target.value;
         if (val === "lookup_order") {
-            toolParamContainer.innerHTML = `<label>Order ID:</label><input type="text" id="tool-param-input" class="form-input" value="ORD-9821">`;
+            toolParamContainer.innerHTML = `<label class="form-label">Order ID:</label><input type="text" id="tool-param-input" class="custom-input" value="ORD-9821">`;
         } else if (val === "calculate_refund") {
-            toolParamContainer.innerHTML = `<label>Order ID:</label><input type="text" id="tool-param-input" class="form-input" value="ORD-9821">`;
+            toolParamContainer.innerHTML = `<label class="form-label">Order ID:</label><input type="text" id="tool-param-input" class="custom-input" value="ORD-9821">`;
         } else if (val === "check_warranty") {
-            toolParamContainer.innerHTML = `<label>Serial Number:</label><input type="text" id="tool-param-input" class="form-input" value="SN-QT8892">`;
+            toolParamContainer.innerHTML = `<label class="form-label">Serial Number:</label><input type="text" id="tool-param-input" class="custom-input" value="SN-QT8892">`;
         } else if (val === "escalate_ticket") {
-            toolParamContainer.innerHTML = `<label>Customer Email:</label><input type="text" id="tool-param-input" class="form-input" value="bishtkartik2005@gmail.com">`;
+            toolParamContainer.innerHTML = `<label class="form-label">Customer Email:</label><input type="text" id="tool-param-input" class="custom-input" value="bishtkartik2005@gmail.com">`;
         }
     });
 
     btnRunTool.addEventListener("click", async () => {
         const toolName = toolSelect.value;
-        const paramVal = document.getElementById("tool-param-input").value.trim();
+        const paramInput = document.getElementById("tool-param-input");
+        const paramVal = paramInput ? paramInput.value.trim() : "";
 
         let args = {};
         if (toolName === "lookup_order" || toolName === "calculate_refund") {
@@ -483,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
             args = { customer_email: paramVal, issue_summary: "Critical assistance needed", severity: "Critical" };
         }
 
-        toolOutput.innerHTML = `<pre>Executing tool...</pre>`;
+        toolOutput.querySelector("pre").textContent = "Executing tool...";
 
         try {
             const resp = await fetch("/api/tools/execute", {
@@ -492,21 +570,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ tool_name: toolName, arguments: args })
             });
             const data = await resp.json();
-            toolOutput.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            toolOutput.querySelector("pre").textContent = JSON.stringify(data, null, 2);
         } catch (err) {
-            toolOutput.innerHTML = `<pre>Error executing tool.</pre>`;
+            toolOutput.querySelector("pre").textContent = "Error executing tool.";
         }
     });
 
     // 7. Modal Citation Viewer
     window.showCitationModal = (source, category, score) => {
         modalTitle.textContent = source;
-        modalMeta.innerHTML = `<span class="chunk-badge">${category}</span> <span style="color: var(--accent-emerald); font-size: 0.8rem; margin-left: 8px;">Relevance: ${(score*100).toFixed(0)}%</span>`;
+        modalMeta.innerHTML = `<span class="count-badge">${category}</span> <span style="color: var(--emerald); font-size: 0.82rem; margin-left: 8px; font-weight: 700;">Relevance Score: ${(score*100).toFixed(0)}% Match</span>`;
         
-        // Find matching chunks in state
         const matching = state.chunks.filter(c => c.metadata.source === source);
         if (matching.length > 0) {
-            modalContent.innerHTML = matching.map(m => `<div style="margin-bottom: 14px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px;">${escapeHtml(m.text)}</div>`).join("");
+            modalContent.innerHTML = matching.map(m => `<div style="margin-bottom: 14px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 8px;">${escapeHtml(m.text)}</div>`).join("");
         } else {
             modalContent.innerHTML = `<p>Referenced directly from pre-indexed policy knowledge base.</p>`;
         }
@@ -533,13 +610,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Bold
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         // Inline code
-        html = html.replace(/`([^`]+)`/g, '<code style="background: rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 4px; font-family: monospace;">$1</code>');
+        html = html.replace(/`([^`]+)`/g, '<code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); color: var(--cyan);">$1</code>');
         // Headers
-        html = html.replace(/### (.*?)\n/g, '<h4 style="margin: 10px 0 6px; color: var(--primary); font-size: 0.95rem;">$1</h4>');
+        html = html.replace(/### (.*?)\n/g, '<h4 style="margin: 12px 0 8px; color: var(--cyan); font-size: 1rem;">$1</h4>');
         // Bullet points
-        html = html.replace(/^\s*-\s+(.*?)$/gm, '<li style="margin-left: 20px;">$1</li>');
+        html = html.replace(/^\s*-\s+(.*?)$/gm, '<li style="margin-left: 20px; margin-bottom: 4px;">$1</li>');
         // Blockquotes
-        html = html.replace(/^&gt; (.*?)$/gm, '<blockquote style="border-left: 3px solid var(--primary); padding-left: 10px; margin: 8px 0; color: var(--text-dim); font-style: italic;">$1</blockquote>');
+        html = html.replace(/^&gt; (.*?)$/gm, '<blockquote style="border-left: 3px solid var(--cyan); padding-left: 12px; margin: 10px 0; color: var(--text-secondary); font-style: italic; background: rgba(6,182,212,0.04); padding: 8px 12px; border-radius: 0 8px 8px 0;">$1</blockquote>');
         // Linebreaks
         html = html.replace(/\n\n/g, '<br><br>');
         return html;
