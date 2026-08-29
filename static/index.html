@@ -92,14 +92,26 @@
                     <span class="nav-label">Agent Tools & Live DB</span>
                 </button>
 
+                <button class="nav-link" data-tab="viva-tab" id="nav-viva">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <span class="nav-label">Interview & Viva Guide</span>
+                    <span class="nav-badge-pill" style="background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3);">B.Tech CSE</span>
+                </button>
+
                 <button class="nav-link" data-tab="settings-tab" id="nav-settings">
                     <div class="nav-icon-wrapper"><i class="fa-solid fa-sliders"></i></div>
                     <span class="nav-label">Brain & Model Config</span>
                 </button>
             </nav>
 
-            <!-- Sidebar Live Status Card -->
+            <!-- Sidebar Live Status Card & Student Bio -->
             <div class="sidebar-bottom">
+                <div class="glass-mini-card" style="margin-bottom: 10px; border-color: rgba(6, 182, 212, 0.25);">
+                    <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">Student Developer</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Kartik Bisht</div>
+                    <div style="font-size: 0.72rem; color: var(--cyan);">B.Tech Computer Science</div>
+                </div>
+
                 <div class="glass-mini-card">
                     <div class="status-header">
                         <div class="status-ping">
@@ -502,7 +514,106 @@
                 </div>
             </section>
 
-            <!-- TAB 6: SETTINGS & BRAIN CONFIG -->
+            <!-- TAB 6: INTERVIEW & VIVA PREPARATION GUIDE (B.TECH CSE) -->
+            <section class="tab-content" id="viva-tab">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon emerald"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div>
+                            <h3 class="panel-title">B.Tech CSE Placement Interview & Viva Guide</h3>
+                            <p class="panel-desc">Quick cheat sheet, system design justification, mathematical formulas, and top 10 interviewer questions</p>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <!-- Elevator Pitch Card -->
+                        <div class="glass-panel" style="background: rgba(6, 182, 212, 0.05); border-color: rgba(6, 182, 212, 0.3); margin-bottom: 24px; padding: 20px;">
+                            <h4 style="color: var(--cyan); font-size: 1.05rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-bullhorn"></i> 1-Minute Elevator Pitch (Say this in interview)
+                            </h4>
+                            <p style="font-size: 0.88rem; color: var(--text-primary); line-height: 1.6;">
+                                <em>"I built an <strong>Autonomous AI Support Agent with RAG</strong> to solve enterprise customer support hallucination. The system implements a 4-stage pipeline: First, it ingests raw policy PDFs and applies sliding-window recursive chunking (350 tokens, 60 overlap) to preserve semantic boundaries. Second, it computes high-dimensional vector embeddings and indexes them in a Cosine Vector Store with hybrid BM25 keyword reranking. Third, an Agentic Brain uses a ReAct loop to classify user intent, autonomously invoke backend tools (like live order lookup, refund calculations, and SLA ticket escalations), and verify fact-grounding. Finally, it synthesizes factual responses with full source citations and live thought tracing."</em>
+                            </p>
+                        </div>
+
+                        <!-- Mathematical Foundations -->
+                        <div style="margin-bottom: 28px;">
+                            <h4 style="font-size: 1rem; color: var(--text-primary); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-square-root-variable text-purple"></i> Mathematical & Algorithmic Foundations
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                                <div class="result-card">
+                                    <h5 style="color: var(--cyan); margin-bottom: 6px;">1. Cosine Similarity Formula</h5>
+                                    <code style="display: block; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 6px;">
+                                        Cosine(u, v) = (u • v) / (||u||₂ * ||v||₂)
+                                    </code>
+                                    <p style="font-size: 0.78rem; color: var(--text-muted);">Calculates the angular distance between normalized high-dimensional query and document vectors, invariant to text length.</p>
+                                </div>
+                                <div class="result-card">
+                                    <h5 style="color: var(--purple-glow); margin-bottom: 6px;">2. Sliding Window Chunking</h5>
+                                    <code style="display: block; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 6px;">
+                                        Step = ChunkSize (350) - Overlap (60) = 290
+                                    </code>
+                                    <p style="font-size: 0.78rem; color: var(--text-muted);">60-token overlap prevents sentences from being severed mid-thought across adjacent chunk boundaries.</p>
+                                </div>
+                                <div class="result-card">
+                                    <h5 style="color: var(--emerald); margin-bottom: 6px;">3. Time & Space Complexity</h5>
+                                    <code style="display: block; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 6px;">
+                                        Search Time: O(N * D) | Memory: O(N * D)
+                                    </code>
+                                    <p style="font-size: 0.78rem; color: var(--text-muted);">Where N = number of indexed chunks, D = embedding dimension (256 dense features).</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top 10 Interview Questions Accordion -->
+                        <div>
+                            <h4 style="font-size: 1rem; color: var(--text-primary); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-circle-question text-cyan"></i> Top Interview Questions & Ready Answers
+                            </h4>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <details class="thought-card" style="padding: 12px 16px; cursor: pointer;">
+                                    <summary style="font-weight: 700; color: var(--cyan); font-size: 0.88rem;">Q1: Why did you choose RAG instead of Fine-Tuning an LLM?</summary>
+                                    <p style="margin-top: 8px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                                        <strong>Answer:</strong> Fine-tuning updates model weights for style/format, but is expensive, slow to update, and still hallucinates on dynamic facts. RAG separates <em>knowledge retrieval</em> from <em>reasoning</em>: policy updates only require re-indexing a PDF in the Vector DB without retraining. It also provides verifiable source citations.
+                                    </p>
+                                </details>
+
+                                <details class="thought-card" style="padding: 12px 16px; cursor: pointer;">
+                                    <summary style="font-weight: 700; color: var(--cyan); font-size: 0.88rem;">Q2: How does the ReAct Agent decide whether to call a tool or search the knowledge base?</summary>
+                                    <p style="margin-top: 8px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                                        <strong>Answer:</strong> The orchestrator implements a multi-step ReAct loop: First, it runs intent & entity classification. If an Order ID (<code>ORD-XXXX</code>) is detected, it triggers <code>lookup_order</code>. If refund intent is present, it computes eligibility against the 30-day return policy. If low confidence or high outage sentiment is detected, it executes <code>escalate_ticket</code>.
+                                    </p>
+                                </details>
+
+                                <details class="thought-card" style="padding: 12px 16px; cursor: pointer;">
+                                    <summary style="font-weight: 700; color: var(--cyan); font-size: 0.88rem;">Q3: How do you prevent LLM hallucinations?</summary>
+                                    <p style="margin-top: 8px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                                        <strong>Answer:</strong> We enforce three guardrails: (1) Prompt grounding constraint instructing the model to answer <em>only</em> from retrieved context chunks, (2) Grounding confidence scoring that measures semantic alignment, and (3) Source document citation linking.
+                                    </p>
+                                </details>
+
+                                <details class="thought-card" style="padding: 12px 16px; cursor: pointer;">
+                                    <summary style="font-weight: 700; color: var(--cyan); font-size: 0.88rem;">Q4: Why FastAPI over traditional Flask or Django?</summary>
+                                    <p style="margin-top: 8px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                                        <strong>Answer:</strong> FastAPI is built natively on ASGI (Starlette + Uvicorn) providing asynchronous non-blocking I/O, which is essential when awaiting external LLM API calls and vector calculations. It also offers automatic Pydantic schema validation and Swagger docs.
+                                    </p>
+                                </details>
+
+                                <details class="thought-card" style="padding: 12px 16px; cursor: pointer;">
+                                    <summary style="font-weight: 700; color: var(--cyan); font-size: 0.88rem;">Q5: How would you scale this system for 10 Million enterprise documents?</summary>
+                                    <p style="margin-top: 8px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                                        <strong>Answer:</strong> Replace exact brute-force cosine matrix search with Approximate Nearest Neighbor (ANN) indexing like HNSW (Hierarchical Navigable Small World) in a distributed vector database (e.g. Pinecone, Milvus, Qdrant). Move document ingestion to Celery background task workers with Redis queues.
+                                    </p>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: SETTINGS & BRAIN CONFIG -->
             <section class="tab-content" id="settings-tab">
                 <div class="glass-panel settings-panel">
                     <div class="panel-header">
@@ -558,9 +669,9 @@
                 <i class="fa-solid fa-wave-pulse"></i>
                 <span>Search</span>
             </button>
-            <button class="bottom-nav-item" data-tab="arch-tab">
-                <i class="fa-solid fa-diagram-project"></i>
-                <span>Flow</span>
+            <button class="bottom-nav-item" data-tab="viva-tab">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>Viva</span>
             </button>
             <button class="bottom-nav-item" data-tab="tools-tab">
                 <i class="fa-solid fa-screwdriver-wrench"></i>
