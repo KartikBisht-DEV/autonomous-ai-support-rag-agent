@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // App State
     const state = {
         activeTab: "chat-tab",
-        theme: localStorage.getItem("rag_theme") || "dark",
+        theme: localStorage.getItem("rag_theme") || "light",
         llmProvider: localStorage.getItem("rag_provider") || "local",
         apiKey: localStorage.getItem("rag_api_key") || "",
         systemPrompt: localStorage.getItem("rag_sys_prompt") || "You are an Autonomous AI Customer Support Agent with RAG. You provide accurate, factual assistance grounded strictly in company policies.",
