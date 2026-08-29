@@ -33,19 +33,22 @@ Customers holding Diamond and Enterprise Tier accounts qualify for Instant Refun
         "category": "Shipping & Logistics",
         "content": """# SHIPPING, DELIVERY & LOGISTICS GUIDELINES
 
-## 1. Shipping Methods & Estimated Transit Times
-- **Standard Ground Shipping**: 3 to 5 business days across North America and Europe. Free for orders exceeding $75.
-- **Priority Express Air**: 1 to 2 business days. Flat rate of $18.99 for domestic deliveries.
-- **Same-Day Courier**: Available exclusively in metropolitan areas for orders placed before 1:00 PM local time.
-- **International Expedited**: 4 to 8 business days depending on customs clearance procedures.
+## 1. Shipping Methods & Official Carrier Partners
+- **FedEx Priority Air (Domestic & Express)**: 1 to 2 business days. Official tracking format `FX-XXXXXXXXX` (e.g. `FX-884920194`). Flat rate of $18.99 or free for Enterprise Gold & Diamond members.
+- **DHL Express (International & Freight)**: 2 to 4 business days. Official tracking format `DHL-XXXXXXXX` (e.g. `DHL-10928374`). Full DDP tracking with customs clearance automation.
+- **Standard Ground Logistics**: 3 to 5 business days across North America and Europe. Free on all orders exceeding $75.00.
+- **Same-Day Metropolitan Courier**: Available exclusively for orders placed before 1:00 PM local time.
 
-## 2. Lost, Stolen, or Damaged in Transit
-- If tracking shows 'Delivered' but the package is missing, customers must report within 7 business days. Our automated resolution system will immediately launch an investigation with carrier GPS scans.
-- If verified lost or stolen, a free replacement order is dispatched within 24 hours via Priority Air, or a 100% store credit is issued.
+## 2. Real-Time Tracking & Order Database Synchronization
+- All customer orders (format `ORD-XXXX`, e.g. `ORD-9821`, `ORD-4412`) update tracking events in real time from carrier telematics.
+- Upon carrier delivery scan, the 30-day return window and warranty coverage countdown officially starts.
 
-## 3. Customs, Duties, and International Taxes
-- All European Union, UK, and APAC shipments are dispatched DDP (Delivered Duty Paid). All import VAT and clearance taxes are calculated and collected at checkout so no additional fees are charged upon delivery.
-- Customs clearance delays are not factored into standard shipping SLA estimates."""
+## 3. Lost, Stolen, or Damaged in Transit
+- If tracking shows 'Delivered' but the package is missing, customers must report within 7 business days. Our automated system executes GPS scan verification.
+- If verified lost or stolen, a free replacement order is dispatched within 24 hours via FedEx Priority Air, or a 100% store credit is issued.
+
+## 4. Customs, Duties, and International Taxes
+- All European Union, UK, and APAC shipments are dispatched DDP (Delivered Duty Paid). All import VAT and clearance taxes are calculated and collected at checkout so no additional fees are charged upon delivery."""
     },
     {
         "filename": "Hardware_Warranty_and_Accidental_Damage_SLA.txt",

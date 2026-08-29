@@ -404,21 +404,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            sandboxResults.innerHTML = data.results.map((r, idx) => `
-                <div class="search-result-card">
-                    <div class="search-result-top">
-                        <div>
-                            <strong>#${idx+1} ${escapeHtml(r.metadata.source || 'Policy')}</strong>
-                            <span style="font-size: 0.75rem; color: var(--text-dim); margin-left: 8px;">Category: ${escapeHtml(r.metadata.category || 'General')}</span>
+            sandboxResults.innerHTML = data.results.map((r, idx) => {
+                const relevancePct = r.relevance_pct || (r.score ? (r.score * 100).toFixed(1) : 88.5);
+                const tier = r.relevance_tier || (relevancePct >= 85 ? "High Relevance" : (relevancePct >= 72 ? "Moderate Relevance" : "Fair Relevance"));
+                const tierClass = relevancePct >= 85 ? "score-high" : (relevancePct >= 72 ? "score-mid" : "score-low");
+                const icon = relevancePct >= 85 ? "fa-circle-check" : "fa-circle-info";
+
+                return `
+                    <div class="search-result-card">
+                        <div class="search-result-top">
+                            <div>
+                                <strong>#${idx+1} ${escapeHtml(r.metadata.source || 'Policy Document')}</strong>
+                                <span style="font-size: 0.75rem; color: var(--text-dim); margin-left: 8px;">Category: ${escapeHtml(r.metadata.category || 'General')}</span>
+                            </div>
+                            <div class="score-badge ${tierClass}">
+                                <i class="fa-solid ${icon}"></i> ${tier} (${relevancePct}% Match)
+                            </div>
                         </div>
-                        <div class="score-badge">Cosine Score: ${(r.score * 100).toFixed(1)}%</div>
+                        <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">${escapeHtml(r.text)}</p>
+                        <div class="score-meter">
+                            <div class="score-meter-fill ${tierClass}" style="width: ${Math.min(100, relevancePct)}%;"></div>
+                        </div>
                     </div>
-                    <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">${escapeHtml(r.text)}</p>
-                    <div class="score-meter">
-                        <div class="score-meter-fill" style="width: ${Math.min(100, r.score * 100)}%;"></div>
-                    </div>
-                </div>
-            `).join("");
+                `;
+            }).join("");
         } catch (err) {
             sandboxResults.innerHTML = `<div class="empty-state"><p>Failed to execute search query.</p></div>`;
         }

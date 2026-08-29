@@ -747,25 +747,58 @@ body {
     background: rgba(16, 185, 129, 0.15);
     color: var(--accent-emerald);
     border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.76rem;
-    font-family: var(--font-mono);
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 0.78rem;
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.score-badge.score-high {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-emerald);
+    border-color: rgba(16, 185, 129, 0.35);
+}
+
+.score-badge.score-mid {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-amber);
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+.score-badge.score-low {
+    background: rgba(148, 163, 184, 0.15);
+    color: var(--text-muted);
+    border-color: rgba(148, 163, 184, 0.3);
 }
 
 .score-meter {
-    height: 4px;
+    height: 6px;
     background: rgba(255, 255, 255, 0.08);
-    border-radius: 2px;
+    border-radius: 3px;
     overflow: hidden;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .score-meter-fill {
     height: 100%;
     background: var(--accent-emerald);
-    border-radius: 2px;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+.score-meter-fill.score-high {
+    background: linear-gradient(90deg, #10b981, #06b6d4);
+}
+
+.score-meter-fill.score-mid {
+    background: linear-gradient(90deg, #f59e0b, #eab308);
+}
+
+.score-meter-fill.score-low {
+    background: #64748b;
 }
 
 /* Architecture Flow */

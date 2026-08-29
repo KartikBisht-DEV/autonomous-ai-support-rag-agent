@@ -268,7 +268,7 @@
                                         <th>Component</th>
                                         <th>Role</th>
                                         <th>Default / Available Models</th>
-                                        <th>Fail-Safe Fallback</th>
+                                        <th>Safety Guardrail / Fallback</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -276,25 +276,25 @@
                                         <td><strong>Ingestion Engine</strong></td>
                                         <td>Text parsing & chunking</td>
                                         <td>Recursive Paragraph Split (350 tokens, 60 overlap)</td>
-                                        <td>Sentence boundary preservation</td>
+                                        <td>Sentence Boundary Preservation & Regex Splitting</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Vector Store</strong></td>
                                         <td>High-dimensional indexing</td>
                                         <td>Cosine VectorDB with BM25 Hybrid Boost</td>
-                                        <td>In-memory dense matrix</td>
+                                        <td>In-Memory Dense Matrix & BM25 Keyword Search</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Agentic Orchestrator</strong></td>
                                         <td>ReAct Loop & Tool Router</td>
                                         <td>Order DB, Refund Engine, SLA Escalator</td>
-                                        <td>Deterministic Grounded Engine</td>
+                                        <td>Hardcoded Policy Fallback / Static System Response</td>
                                     </tr>
                                     <tr>
                                         <td><strong>LLM Provider</strong></td>
                                         <td>Fact Synthesis</td>
                                         <td>Gemini 2.0 Flash / OpenAI GPT-4o / Local</td>
-                                        <td>Direct Policy Excerpt Grounding</td>
+                                        <td>Rule-Based Policy Fallback / Template Synthesis</td>
                                     </tr>
                                 </tbody>
                             </table>
